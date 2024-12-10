@@ -79,21 +79,21 @@ function ShowMap({ plan, style }) {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
             
-            {plan.map(event => (
-              // Ensure event has the required properties
+            {plan.map(plan_place => (
+              // Ensure plan_place has the required properties
               <Marker 
-                key={event.id} // Ensure each event has a unique id
-                position={[event.position.lat, event.position.lon]} // Ensure position is defined
+                key={plan_place.id} // Ensure each event has a unique id
+                position={[plan_place.position.lat, plan_place.position.lon]} // Ensure position is defined
                 icon={new Icon({ iconUrl: markerIcon, iconSize: [25, 41], iconAnchor: [12, 41], shadowUrl: markerShadow })}
               >
-                <Popup>{event.event}</Popup> {/* Ensure event has a description */}
+                <Popup>{plan_place.Place}</Popup> {/* Ensure event has a description */}
               </Marker>
             ))}
             
             {/* Draw a line between the locations of the plan */}
             {plan.length > 0 && (
               <Polyline 
-                positions={plan.map(event => [event.position.lat, event.position.lon])} 
+                positions={plan.map(plan_place => [plan_place.position.lat, plan_place.position.lon])} 
                 color="blue" 
                 weight={4} 
                 opacity={0.7} 
@@ -105,14 +105,24 @@ function ShowMap({ plan, style }) {
 }
 
 
-
-
 // Update the ShowPlan component
 const ShowPlan = ({ plan, updatePlan }) => {
-  const [list, setList] = useState(plan);
+  //const [list, setList] = useState(plan);
+  const draggableList = [
+    {name: "Mike"},
+    {name: "Michael"},
+    {name: "Mason"},
+    {name: "Ron"},
+    {name: "Joe"},
+    {name: "Abe"},
+    {name: "Box"},
+  ];
+  const [list, setList] = React.useState(draggableList);
+
+  
   return (
     <div>
-      <h2>Here is your plan</h2>
+      <h2>Plan for the day:</h2>
       <ul>
         {plan.map((destination, index) => (
           <li key={index}>{destination.event}</li>
@@ -125,8 +135,11 @@ const ShowPlan = ({ plan, updatePlan }) => {
         setList={setList}
         animation="200"
         easing="ease-out">
-        {list.map(item => (
-          <div className="draggableItem" key={item.id}>{item.event}</div>
+        {plan.map((destination, index) => (
+          <div className="draggableItem" key={index} 
+          style={{ border: '1px solid black', padding: '5px', margin: '5px', borderRadius: '4px', width: '200px', textAlign: 'center' }}>
+            {destination.event}
+          </div>
         ))}
       </ReactSortable>
 
